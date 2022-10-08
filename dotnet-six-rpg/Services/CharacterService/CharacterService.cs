@@ -8,18 +8,19 @@ public class CharacterService : ICharacterService
         new Character {Id = 1, Name = "John"}
     };
 
-    public List<Character> GetAllCharacters()
+    public async Task<List<Character>> GetAllCharacters()
     {
         return _characters;
     }
 
-    public Character GetCharacterById(int id)
+    public async Task<Character> GetCharacterById(int id)
     {
         return _characters.FirstOrDefault(c => c.Id == id);
     }
 
-    public List<Character> AddCharacter(Character newCharacter)
+    public async Task<List<Character>> AddCharacter(Character newCharacter)
     {
+        _characters.Add(newCharacter);
         return _characters;
     }
 }
