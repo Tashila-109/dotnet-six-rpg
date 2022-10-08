@@ -32,9 +32,10 @@ public class CharacterController : ControllerBase
     {
         return Ok(await _characterService.AddCharacter(newCharacter));
     }
-    
+
     [HttpPut]
-    public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> UpdateCharacter(UpdateCharacterDto updatedCharacter)
+    public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> UpdateCharacter(
+        UpdateCharacterDto updatedCharacter)
     {
         var response = await _characterService.UpdateCharacter(updatedCharacter);
 
@@ -42,7 +43,19 @@ public class CharacterController : ControllerBase
         {
             return NotFound(response);
         }
-        
+
+        return Ok(response);
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> DeleteCharacter(int id)
+    {
+        var response = await _characterService.DeleteCharacter(id);
+        if (response.Data == null)
+        {
+            return NotFound(response);
+        }
+
         return Ok(response);
     }
 }

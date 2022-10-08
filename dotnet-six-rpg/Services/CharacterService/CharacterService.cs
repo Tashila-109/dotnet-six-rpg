@@ -67,4 +67,23 @@ public class CharacterService : ICharacterService
 
         return response;
     }
+
+    public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter(int id)
+    {
+        var response = new ServiceResponse<List<GetCharacterDto>>();
+
+        try
+        {
+            var character = _characters.First(c => c.Id == id);
+            _characters.Remove(character);
+            response.Data = _characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
+        }
+        catch (Exception e)
+        {
+            response.Success = false;
+            response.Message = e.Message;
+        }
+
+        return response;
+    }
 }
