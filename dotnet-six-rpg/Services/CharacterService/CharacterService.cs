@@ -10,7 +10,7 @@ public class CharacterService : ICharacterService
         new Character(),
         new Character {Id = 1, Name = "John"}
     };
-    
+
     private readonly IMapper _mapper;
 
     public CharacterService(IMapper mapper)
@@ -20,7 +20,8 @@ public class CharacterService : ICharacterService
 
     public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
     {
-        return new ServiceResponse<List<GetCharacterDto>> {Data = _characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList()};
+        return new ServiceResponse<List<GetCharacterDto>>
+            {Data = _characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList()};
     }
 
     public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id)
@@ -39,5 +40,31 @@ public class CharacterService : ICharacterService
         _characters.Add(character);
         serviceResponse.Data = _characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
         return serviceResponse;
+    }
+
+    public async Task<ServiceResponse<GetCharacterDto>> UpdateCharacter(UpdateCharacterDto updatedCharacter)
+    {
+        var response = new ServiceResponse<GetCharacterDto>();
+
+        try
+        {
+            var character = _characters.FirstOrDefault(c => c.Id == updatedCharacter.Id);
+
+            character.Name = updatedCharacter.Name;
+            character.HitPoints = updatedCharacter.HitPoints;
+            character.Strength = updatedCharacter.Strength;
+            character.Defence = updatedCharacter.Defence;
+            character.Intelligence = updatedCharacter.Intelligence;
+            character.Class = updatedCharacter.Class;
+
+            response.Data = _mapper.Map<GetCharacterDto>(character);
+        }
+        catch (Exception e)
+        {
+            response.Success = false;
+            response.Message = e.Message;
+        }
+
+        return response;
     }
 }
